@@ -3,5 +3,14 @@
   "framework": null,
   "installCommand": "npm ci --include=dev --prefix lapaas-course-advisor",
   "buildCommand": "npm run build --prefix lapaas-course-advisor",
-  "outputDirectory": "lapaas-course-advisor/dist"
+  "outputDirectory": "lapaas-course-advisor/dist",
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://anish-lapaas-api.onrender.com/api/:path*" }
+  ],
+  "headers": [
+    { "source": "/api/:path*", "headers": [
+      { "key": "Cache-Control", "value": "no-store" },
+      { "key": "x-vercel-enable-rewrite-caching", "value": "0" }
+    ] }
+  ]
 }

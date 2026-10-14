@@ -8,18 +8,24 @@ for (const [index, faq] of faqs.entries()) {
   test(`${faq.id}: relevant official section and honest navigation label`, () => {
     const original = structuredClone(faq);
     const source = getFaqSource(faq);
-    assert.equal(source.href, `https://cohort.lapaas.com/#${sections[index]}`);
+    assert.equal(source.href, sections[index] === 'faq' ? 'https://cohort.lapaas.com/' : `https://cohort.lapaas.com/#${sections[index]}`);
     assert.ok(source.label.includes(faq.source_section), 'Preserve original source attribution');
     if (sections[index] === 'faq') {
-      assert.match(source.label, /FAQ section/);
-      assert.match(source.note, /^Section link only; expand “.+” on the official page\.$/);
-      assert.ok(source.note.includes(faqSources[faq.id].question));
+      assert.match(source.label, /course homepage/);
+      assert.equal(source.note, '');
     }
     assert.deepEqual(faq, original, 'Navigation must not mutate a verified fact');
   });
 }
 test('mapping covers exactly the supplied 16 FAQ IDs', () => {
   assert.deepEqual(Object.keys(faqSources).sort(), faqs.map((faq) => faq.id).sort());
+});
+test('all runtime FAQ sources stay on cohort.lapaas.com', () => {
+  for (const faq of faqs) {
+    for (const url of [faq.source_url, faq.secondary_source_url, getFaqSource(faq).href].filter(Boolean)) {
+      assert.equal(new URL(url).origin, 'https://cohort.lapaas.com');
+    }
+  }
 });
 test('missing mapping keeps the official homepage and explains the limitation', () => {
   const source = getFaqSource(faqs[2], {});

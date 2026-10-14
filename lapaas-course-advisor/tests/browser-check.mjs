@@ -25,7 +25,7 @@ try {
   const links = await page.locator('.card-source a').evaluateAll((items) => items.map((item) => ({ href: item.href, label: item.textContent, target: item.target, rel: item.rel })));
   assert.equal(links.length, 16);
   assert.ok(links.every((link, index) => link.href === getFaqSource(faqs[index]).href && link.label && link.target === '_blank' && link.rel.includes('noopener') && link.rel.includes('noreferrer')));
-  assert.equal(await page.locator('.policy-link').getAttribute('href'), 'https://lapaas.com/refund-policy.html');
+  assert.equal(await page.locator('.policy-link').count(), 0);
   checks.push('All 16 answer source labels and official URLs, safe external-link attributes, and refund policy URL verified in DOM');
   await page.screenshot({ path: 'tests/desktop-preview.png' });
 

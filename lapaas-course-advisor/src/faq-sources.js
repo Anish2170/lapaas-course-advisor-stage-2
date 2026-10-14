@@ -40,9 +40,16 @@ export function getFaqSource(faq, sources = faqSources) {
     label: 'Official course page',
     note: `Direct section link unavailable. Look for “${faq.source_section || faq.question}” on the official page.`,
   };
+  // Individual official FAQ questions have no direct URL. Use the course
+  // homepage, as requested, rather than implying a question-level deep link.
+  if (source.question) return {
+    href: knowledgeBase.official_course_url,
+    label: `${faq.source_section} · course homepage`,
+    note: '',
+  };
   return {
     href,
-    label: `${faq.source_section}${source.question ? ' · FAQ section' : source.sectionLabel ? ` · ${source.sectionLabel}` : ''}`,
-    note: source.question ? `Section link only; expand “${source.question}” on the official page.` : '',
+    label: `${faq.source_section}${source.sectionLabel ? ` · ${source.sectionLabel}` : ''}`,
+    note: '',
   };
 }

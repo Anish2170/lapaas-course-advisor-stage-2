@@ -20,7 +20,6 @@ function AnswerCard({ faq, featured = false }) {
     <p className="answer">{faq.answer}</p>
     {faq.limitation && <p className="limitation"><Icon name="info" size={15} /><span>{faq.limitation}</span></p>}
     <FaqSource faq={faq} />
-    {faq.secondary_source_url && <a className="policy-link" href={faq.secondary_source_url} target="_blank" rel="noopener noreferrer">Read refund eligibility terms<Icon name="external" size={13} /></a>}
   </article>;
 }
 

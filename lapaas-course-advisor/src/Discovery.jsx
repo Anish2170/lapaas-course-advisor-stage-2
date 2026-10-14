@@ -4,7 +4,7 @@ import { knowledgeBase } from './faq.js';
 import { Icon, OfficialLink } from './ui.jsx';
 
 function Fact({ faq }) {
-  return <div className="discovery-fact"><p>{faq.answer}</p>{faq.limitation && <small>{faq.limitation}</small>}<a href={faq.source_url} target="_blank" rel="noopener noreferrer">{faq.source_section}<Icon name="external" size={12} /></a>{faq.secondary_source_url && <a href={faq.secondary_source_url} target="_blank" rel="noopener noreferrer">Refund eligibility terms<Icon name="external" size={12} /></a>}</div>;
+  return <div className="discovery-fact"><p>{faq.answer}</p>{faq.limitation && <small>{faq.limitation}</small>}<a href={faq.source_url} target="_blank" rel="noopener noreferrer">{faq.source_section}<Icon name="external" size={12} /></a></div>;
 }
 
 function Recommendation({ answers, dispatch, onFAQ, titleRef }) {

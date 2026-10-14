@@ -98,7 +98,6 @@
       "aliases": ["Can I get a refund?", "What is the money back policy?"],
       "answer": "The site advertises a 30-day refund policy, subject to Lapaas refund terms.",
       "status": "verified", "source_section": "Refund statement", "source_url": "https://cohort.lapaas.com/",
-      "secondary_source_url": "https://lapaas.com/refund-policy.html",
       "limitation": "Do not promise an unconditional refund; the current eligibility terms must be reviewed."
     },
     {

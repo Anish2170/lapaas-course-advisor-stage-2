@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "purpose": "Career Gap Decoder: map job-description skills to explicitly named Lapaas curriculum topics.",
+    "verified_on": "2026-10-13",
+    "source_url": "https://cohort.lapaas.com/",
+    "important_rule": "Listed = topic appears in the public curriculum. This does not prove mastery, job readiness, exact depth of instruction, or suitability for a particular role."
+  },
+  "published_curriculum_skills": [
+    {"skill": "AI fundamentals", "terms": ["ai fundamentals", "llm", "large language model", "model selection"], "module": "AI & Product Foundations"},
+    {"skill": "Product research", "terms": ["product research", "user research", "market research", "product validation"], "module": "AI & Product Foundations"},
+    {"skill": "MVP and PRD", "terms": ["mvp", "prd", "product requirements", "product thinking"], "module": "Product Thinking & PRDs"},
+    {"skill": "AI-assisted coding", "terms": ["ai-assisted coding", "ai coding", "codex", "claude code"], "module": "AI-Assisted Development"},
+    {"skill": "Frontend", "terms": ["frontend", "front end", "user interface", "web interface"], "module": "Full-Stack MVP Engineering"},
+    {"skill": "Backend", "terms": ["backend", "back end", "server side"], "module": "Full-Stack MVP Engineering"},
+    {"skill": "Full-stack development", "terms": ["full stack", "full-stack", "web application"], "module": "Full-Stack MVP Engineering"},
+    {"skill": "APIs", "terms": ["api", "apis", "rest api", "api integration"], "module": "MCP, APIs & Integrations"},
+    {"skill": "Databases", "terms": ["database", "sql", "postgres", "supabase"], "module": "Full-Stack MVP Engineering"},
+    {"skill": "Authentication", "terms": ["authentication", "login system", "auth"], "module": "Full-Stack MVP Engineering"},
+    {"skill": "Multimodal AI", "terms": ["multimodal", "image generation", "voice ai", "audio ai", "video ai"], "module": "Multimodal AI"},
+    {"skill": "RAG", "terms": ["rag", "retrieval augmented generation", "retrieval-augmented generation", "vector search", "embeddings"], "module": "RAG & Knowledge Layers"},
+    {"skill": "MCP", "terms": ["mcp", "model context protocol"], "module": "MCP, APIs & Integrations"},
+    {"skill": "AI agents", "terms": ["ai agent", "ai agents", "agentic", "multi-agent", "langgraph"], "module": "Agents & Automation"},
+    {"skill": "Automation", "terms": ["automation", "automated workflow", "workflow automation"], "module": "Agents & Automation"},
+    {"skill": "Testing and evaluation", "terms": ["testing", "quality assurance", "qa", "evaluation", "evals"], "module": "Production, Launch & Growth"},
+    {"skill": "Deployment", "terms": ["deployment", "deploy", "vercel", "docker", "cloud deployment"], "module": "Production, Launch & Growth"},
+    {"skill": "Product analytics", "terms": ["product analytics", "analytics", "monitoring", "observability"], "module": "Production, Launch & Growth"}
+  ],
+  "examples_not_confirmed_in_published_curriculum": [
+    "PyTorch", "TensorFlow", "Data Structures and Algorithms (DSA)", "Competitive programming", "Guaranteed placements", "Advanced computer vision research"
+  ],
+  "output_rules": [
+    "Extract only skills explicitly appearing in the pasted job description.",
+    "Match terms case-insensitively with word boundaries; avoid substring false positives (e.g. rag in drag).",
+    "Treat mapping as a curriculum-topic match, never a student-skill assessment.",
+    "For an extracted skill absent from the verified mapping, show: Not verified in public curriculum, NOT: Not taught.",
+    "Never claim the course guarantees hiring, employment, a completed project, or advanced mastery.",
+    "Never invent a match percentage or readiness score from simple keyword matches."
+  ]
+}

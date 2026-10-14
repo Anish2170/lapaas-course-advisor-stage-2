@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "project": "Lapaas AI Course Discovery & Enrolment Assistant",
+    "primary_audience": "Students & Freshers",
+    "verified_on": "2026-10-13",
+    "primary_source": "https://cohort.lapaas.com/",
+    "notes": "Public website facts only. This is a course knowledge base, not a record of student results. Recheck changeable price and terms before a live demo."
+  },
+  "verified_faq": [
+    {
+      "id": "KB001", "category": "overview",
+      "question": "What is Lapaas AI Product Engineering?",
+      "aliases": ["What is this course?", "What does Lapaas teach?"],
+      "answer": "A self-paced course covering AI product research, development, deployment and growth.",
+      "status": "verified", "source_section": "Course overview", "source_url": "https://cohort.lapaas.com/"
+    },
+    {
+      "id": "KB002", "category": "audience",
+      "question": "Who is this course for?",
+      "aliases": ["Is this for students?", "Can a fresher join?"],
+      "answer": "The website includes students and freshers, business owners, and marketers and freelancers.",
+      "status": "verified", "source_section": "Built for your goal", "source_url": "https://cohort.lapaas.com/"
+    },
+    {
+      "id": "KB003", "category": "prerequisites",
+      "question": "Do I need coding experience to start?",
+      "aliases": ["Can I join without coding?", "Is this beginner friendly?"],
+      "answer": "No prior coding is needed to start, but learners must practise and build.",
+      "status": "verified", "source_section": "FAQ: I do not know coding", "source_url": "https://cohort.lapaas.com/"
+    },
+    {
+      "id": "KB004", "category": "curriculum",
+      "question": "Which main topics are taught?",
+      "aliases": ["What is the syllabus?", "Does it teach RAG and agents?"],
+      "answer": "Topics include full-stack development, RAG, MCP, agents, automation, multimodal AI and launch.",
+      "status": "verified", "source_section": "Complete product stack", "source_url": "https://cohort.lapaas.com/"
+    },
+    {
+      "id": "KB005", "category": "learning_outcomes",
+      "question": "Can I learn to build AI applications?",
+      "aliases": ["Will I learn to make a web app?", "What can I build?"],
+      "answer": "The curriculum teaches workflows for full-stack AI apps, integrations and deployable products.",
+      "status": "verified", "source_section": "FAQ: What exactly will I learn to build", "source_url": "https://cohort.lapaas.com/"
+    },
+    {
+      "id": "KB006", "category": "career_objection",
+      "question": "Does this course support portfolio projects?",
+      "aliases": ["Can it help my portfolio?", "Can I show projects on GitHub?"],
+      "answer": "Lapaas highlights working AI products, demos and case studies for student portfolios.",
+      "status": "verified", "source_section": "Students & Freshers", "source_url": "https://cohort.lapaas.com/",
+      "limitation": "This does not guarantee a job or a finished portfolio for every student."
+    },
+    {
+      "id": "KB007", "category": "format",
+      "question": "Is the course live or self-paced?",
+      "aliases": ["Are there live classes?", "Can I study anytime?"],
+      "answer": "It is self-paced, with no scheduled live classes in the current offer.",
+      "status": "verified", "source_section": "FAQ: Is this a live course", "source_url": "https://cohort.lapaas.com/"
+    },
+    {
+      "id": "KB008", "category": "access",
+      "question": "How long can I access the course?",
+      "aliases": ["Is access lifetime?", "When does access expire?"],
+      "answer": "Course access lasts three months from activation.",
+      "status": "verified", "source_section": "FAQ: How long can I access the course", "source_url": "https://cohort.lapaas.com/"
+    },
+    {
+      "id": "KB009", "category": "pricing",
+      "question": "What is the course price?",
+      "aliases": ["How much does it cost?", "Is GST included?"],
+      "answer": "The listed fee is ₹2,999 as a one-time payment, including GST.",
+      "status": "verified", "source_section": "Course offer and FAQ", "source_url": "https://cohort.lapaas.com/"
+    },
+    {
+      "id": "KB010", "category": "platform",
+      "question": "Where can I watch lessons and find course files?",
+      "aliases": ["Which platform is used?", "Is it on Edrilla?"],
+      "answer": "Lessons, slides, lab files and assignments are provided in the Edrilla app.",
+      "status": "verified", "source_section": "FAQ: Where do I access the course", "source_url": "https://cohort.lapaas.com/"
+    },
+    {
+      "id": "KB011", "category": "community",
+      "question": "Is there community support?",
+      "aliases": ["Can I ask questions?", "Can I contact Sahil?"],
+      "answer": "The purchase includes Lapaas learner community access to ask Sahil questions.",
+      "status": "verified", "source_section": "FAQ: Can I ask Sahil questions", "source_url": "https://cohort.lapaas.com/"
+    },
+    {
+      "id": "KB012", "category": "certificate",
+      "question": "Will I receive a certificate?",
+      "aliases": ["Does it offer certification?", "Is the certificate automatic?"],
+      "answer": "A Lapaas completion certificate is offered after finishing course requirements.",
+      "status": "verified", "source_section": "FAQ: Will I receive a certificate", "source_url": "https://cohort.lapaas.com/"
+    },
+    {
+      "id": "KB013", "category": "refund",
+      "question": "Is there a refund policy?",
+      "aliases": ["Can I get a refund?", "What is the money back policy?"],
+      "answer": "The site advertises a 30-day refund policy, subject to Lapaas refund terms.",
+      "status": "verified", "source_section": "Refund statement", "source_url": "https://cohort.lapaas.com/",
+      "secondary_source_url": "https://lapaas.com/refund-policy.html",
+      "limitation": "Do not promise an unconditional refund; the current eligibility terms must be reviewed."
+    },
+    {
+      "id": "KB014", "category": "payment",
+      "question": "Is EMI available?",
+      "aliases": ["Can I pay in instalments?", "Is there a monthly plan?"],
+      "answer": "Eligible cards may show Razorpay EMI options at checkout.",
+      "status": "verified", "source_section": "FAQ: Is EMI available", "source_url": "https://cohort.lapaas.com/"
+    },
+    {
+      "id": "KB015", "category": "time_objection",
+      "question": "How much study time should I plan?",
+      "aliases": ["Can I do this with college?", "How much weekly time is needed?"],
+      "answer": "The website recommends several focused hours each week for lessons and project practice.",
+      "status": "verified", "source_section": "This is not for everyone", "source_url": "https://cohort.lapaas.com/",
+      "limitation": "An exact total course duration in hours is not verified."
+    },
+    {
+      "id": "KB016", "category": "relevance",
+      "question": "Does this course cover tools that may change over time?",
+      "aliases": ["Will the AI tools become outdated?", "What if tools change?"],
+      "answer": "The syllabus connects changing tools to product thinking, retrieval, evaluation and deployment.",
+      "status": "verified", "source_section": "FAQ: Will the tools become outdated", "source_url": "https://cohort.lapaas.com/"
+    }
+  ],
+  "unverified_examples": [
+    {"question": "Will I definitely get a job or internship?", "status": "not_verified", "reason": "No placement guarantee was verified on the official course page."},
+    {"question": "What is the exact total video duration?", "status": "not_verified", "reason": "Total video hours were not clearly specified."},
+    {"question": "Are premium AI tool credits included?", "status": "not_verified", "reason": "Included paid third-party subscriptions were not confirmed."},
+    {"question": "Is it a mobile-only course?", "status": "not_verified", "reason": "Edrilla app is specified; exclusive mobile-only access is not established."},
+    {"question": "Will I receive private one-to-one mentoring?", "status": "not_verified", "reason": "Community question access is confirmed; private mentoring is not."},
+    {"question": "Can I extend access beyond three months?", "status": "not_verified", "reason": "Access extension terms are not described."},
+    {"question": "Can I build absolutely any AI idea after finishing?", "status": "not_verified", "reason": "The course describes learning opportunities, not universal guarantees."}
+  ],
+  "unknown_answer": "I could not verify that detail from Lapaas's official published course information. Please check https://cohort.lapaas.com/ or contact the Lapaas team before deciding.",
+  "official_course_url": "https://cohort.lapaas.com/"
+}

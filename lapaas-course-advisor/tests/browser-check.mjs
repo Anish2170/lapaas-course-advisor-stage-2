@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { faqs, knowledgeBase } from '../src/faq.js';
+import { getFaqSource } from '../src/faq-sources.js';
 
 // Run with an installed Playwright module path; it is not a runtime app dependency.
 const playwrightPath = process.argv[2];
@@ -23,7 +24,7 @@ try {
   checks.push('HTTP 200; React rendered all 16 answers; independent prototype label displayed');
   const links = await page.locator('.card-source a').evaluateAll((items) => items.map((item) => ({ href: item.href, label: item.textContent, target: item.target, rel: item.rel })));
   assert.equal(links.length, 16);
-  assert.ok(links.every((link) => link.href === knowledgeBase.official_course_url && link.label && link.target === '_blank' && link.rel.includes('noopener')));
+  assert.ok(links.every((link, index) => link.href === getFaqSource(faqs[index]).href && link.label && link.target === '_blank' && link.rel.includes('noopener') && link.rel.includes('noreferrer')));
   assert.equal(await page.locator('.policy-link').getAttribute('href'), 'https://lapaas.com/refund-policy.html');
   checks.push('All 16 answer source labels and official URLs, safe external-link attributes, and refund policy URL verified in DOM');
   await page.screenshot({ path: 'tests/desktop-preview.png' });

@@ -1,5 +1,6 @@
 import React from 'react';
 import { knowledgeBase } from './faq.js';
+import { getFaqSource } from './faq-sources.js';
 
 export function Icon({ name, size = 20, ...props }) {
   const paths = {
@@ -17,4 +18,12 @@ export function Icon({ name, size = 20, ...props }) {
 
 export function OfficialLink({ children = 'Visit official course page', className = '' }) {
   return <a className={className} href={knowledgeBase.official_course_url} target="_blank" rel="noopener noreferrer">{children}<Icon name="external" size={15} /></a>;
+}
+
+export function FaqSource({ faq, benefit = false }) {
+  const source = getFaqSource(faq);
+  return <div className={benefit ? 'benefit-reference' : 'source-reference'} data-kb-source={faq.id}>
+    <div className={benefit ? 'benefit-source' : 'card-source'}>{!benefit && <span>Source</span>}<a href={source.href} target="_blank" rel="noopener noreferrer" aria-label={`${source.label} (opens in a new tab)`}>{source.label}<Icon name="external" size={13} /></a></div>
+    {source.note && <p className="source-navigation-note">{source.note}</p>}
+  </div>;
 }

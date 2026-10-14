@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { categories, categoryLabel, faqs, knowledgeBase } from './faq.js';
 import { assessmentReducer, initialAssessment, questions } from './assessment.js';
 import Discovery from './Discovery.jsx';
-import { Icon, OfficialLink } from './ui.jsx';
+import { Icon, OfficialLink, FaqSource } from './ui.jsx';
 import FaqChat from './FaqChat.jsx';
 import './styles.css';
 
@@ -19,7 +19,7 @@ function AnswerCard({ faq, featured = false }) {
     <h3>{faq.question}</h3>
     <p className="answer">{faq.answer}</p>
     {faq.limitation && <p className="limitation"><Icon name="info" size={15} /><span>{faq.limitation}</span></p>}
-    <div className="card-source"><span>Source</span><a href={faq.source_url} target="_blank" rel="noopener noreferrer">{faq.source_section || 'Official course page'}<Icon name="external" size={13} /></a></div>
+    <FaqSource faq={faq} />
     {faq.secondary_source_url && <a className="policy-link" href={faq.secondary_source_url} target="_blank" rel="noopener noreferrer">Read refund eligibility terms<Icon name="external" size={13} /></a>}
   </article>;
 }
@@ -69,7 +69,7 @@ function App() {
 
         <section className="launch-panel" aria-label="Find your learning path"><div><span className="section-caption">START WITH YOUR GOALS</span><h2>What could your learning path look like?</h2><p>Six questions to connect your background, interests and study time with verified course information.</p></div><div><button className="primary-action" onClick={() => setView('discovery')}>Find My Learning Path<Icon name="arrow" size={17} /></button><small>Rule-based guidance · No login needed</small></div></section>
 
-        <section className="course-benefits" aria-labelledby="benefits-title"><div className="library-heading"><div><div className="section-caption">THREE VERIFIED COURSE BENEFITS</div><h2 id="benefits-title">What the published course offers</h2></div></div><div className="benefit-grid">{courseBenefits.map(({ id, title, fact }) => <article className="course-benefit" key={id} data-kb-id={id}><Icon name="check" size={18} /><h3>{title}</h3><p>{fact.answer}</p><a className="benefit-source" href={fact.source_url} target="_blank" rel="noopener noreferrer">{fact.source_section}<Icon name="external" size={13} /></a></article>)}</div><p className="benefits-note">Self-paced study still requires practice. Community access does not establish private mentoring. Check current terms on the official page.</p></section>
+        <section className="course-benefits" aria-labelledby="benefits-title"><div className="library-heading"><div><div className="section-caption">THREE VERIFIED COURSE BENEFITS</div><h2 id="benefits-title">What the published course offers</h2></div></div><div className="benefit-grid">{courseBenefits.map(({ id, title, fact }) => <article className="course-benefit" key={id} data-kb-id={id}><Icon name="check" size={18} /><h3>{title}</h3><p>{fact.answer}</p><FaqSource faq={fact} benefit /></article>)}</div><p className="benefits-note">Self-paced study still requires practice. Community access does not establish private mentoring. Check current terms on the official page.</p></section>
 
         <FaqChat AnswerCard={AnswerCard} />
 

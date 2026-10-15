@@ -4,6 +4,10 @@ import { getFaqSource } from './faq-sources.js';
 
 export function Icon({ name, size = 20, ...props }) {
   const paths = {
+    plus: <path d="M12 5v14M5 12h14" />,
+    clock: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,
+    community: <><circle cx="9" cy="8" r="3" /><path d="M3 21v-3a6 6 0 0 1 12 0v3M17 5a3 3 0 0 1 0 6M21 21v-3a6 6 0 0 0-4-5" /></>,
+    route: <><circle cx="5" cy="19" r="2" /><circle cx="19" cy="5" r="2" /><path d="M5 17v-6a4 4 0 0 1 4-4h2M19 7v6a4 4 0 0 1-4 4h-2M8 4l3 3-3 3M16 14l-3 3 3 3" /></>,
     search: <><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 4.5 4.5" /></>,
     arrow: <><path d="M5 12h14M13 6l6 6-6 6" /></>,
     external: <><path d="M14 4h6v6M20 4l-9 9M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5" /></>,

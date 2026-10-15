@@ -73,19 +73,19 @@ export default function FaqChat({ AnswerCard }) {
   const latest = turns.at(-1);
   return <div className="faq-chat">
     <section className="search-panel" aria-label="Ask a course question">
-      <div className="chat-panel-heading"><span className="section-caption">ASK IN YOUR OWN WORDS</span><span className="chat-service-status">{configured ? 'Gemini enabled for unfamiliar questions' : 'Local matching available'}</span></div>
+      <div className="chat-panel-heading"><h2>Questions about the course?</h2><span className="chat-service-status"><Icon name="shield" size={14} />Verified answers</span></div>
       <form onSubmit={(event) => { event.preventDefault(); search(query); }}>
-        <label htmlFor="question">What would you like to know?</label>
+        <label htmlFor="question" className="sr-only">What would you like to know?</label>
         <div className="search-row"><Icon name="search" size={21} /><input ref={inputRef} id="question" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Ask in English, Hindi or Hinglish…" aria-describedby="search-help" maxLength={MAX_QUESTION_LENGTH} /><button type="submit" className="search-button" disabled={loading}>{loading ? 'Matching…' : 'Find answer'}<Icon name="arrow" size={17} /></button></div>
       </form>
-      <p id="search-help">Try English, हिंदी or Hinglish. Please avoid personal details. Unfamiliar phrasing may be sent to Gemini; course answers always come from the verified knowledge base.</p>
-      <div className="suggestions"><span>TRY ASKING</span>{['What is the course price?', 'Can I join without coding?', 'Is access lifetime?'].map((question) => <button key={question} disabled={loading} onClick={() => search(question)}>{question}<Icon name="arrow" size={13} /></button>)}</div>
+      <p id="search-help">English, हिंदी or Hinglish. Answers come from verified course information.</p>
+      <div className="suggestions"><span>Try a question</span>{[{ label: 'Course fees', question: 'What is the course price?' }, { label: 'Coding experience', question: 'Can I join without coding?' }, { label: 'Course access', question: 'Is access lifetime?' }].map(({ label, question }) => <button key={question} disabled={loading} onClick={() => search(question)} aria-label={question}>{label}<Icon name="arrow" size={13} /></button>)}</div>
+      <details className="chat-privacy"><summary>How your questions are handled</summary><p>{configured ? 'AI matching is available. ' : ''}Unfamiliar phrasing may be sent to Gemini to find a matching FAQ. Please avoid personal details. Previous messages and assessment answers are never sent. Chat stays in this tab’s memory and clears on reload.</p></details>
     </section>
     {latest && <section className="chat-conversation" aria-label="Search result" aria-live="polite" aria-atomic="false">
       <div className="chat-controls"><span>Answers sourced from course facts · checked {knowledgeBase.metadata.verified_on}</span><button className="clear-button" onClick={clear} aria-label="Clear search"><Icon name="close" size={16} />Clear chat</button></div>
       <Turn turn={latest} latest AnswerCard={AnswerCard} />
       {turns.length > 1 && <details className="chat-history"><summary>Earlier messages ({turns.length - 1})</summary>{turns.slice(0, -1).map((turn) => <Turn key={turn.id} turn={turn} AnswerCard={AnswerCard} />)}</details>}
     </section>}
-    <p className="chat-memory-note">Questions are independent: previous messages and assessment answers are never sent to Gemini. Chat stays in this tab’s memory and clears on reload.</p>
   </div>;
 }

@@ -1,4 +1,6 @@
 import { faqs, knowledgeBase } from './faq.js';
+import { getLearningGuidance, concernGuidance } from './recommendation-guidance.js';
+import { createLearningRoadmap } from './learning-roadmap.js';
 import skillsMapping from '../../data/skills_mapping.json' with { type: 'json' };
 import { getGoalOptions, getInterestOptions, getConcernOptions, goalIntent, interestIntent } from './assessment-options.js';
 export { roleGoals, otherGoals } from './assessment-options.js';
@@ -18,7 +20,7 @@ export const questions = [
   { id: 'time', short: 'Your study time', title: 'How much time can you dedicate each week?', helper: 'Think about time for practice as well as watching lessons.', options: options([
     ['low', 'Less than 2 hours'], ['some', '2–5 hours'], ['regular', '5–10 hours'], ['high', 'More than 10 hours'], ['unsure', 'Not sure'],
   ]) },
-  { id: 'concern', short: 'Your concern', title: 'What is your biggest concern?', helper: 'We will address this directly, including what the published information cannot confirm.', options: [] },
+  { id: 'concern', short: 'Your concern', title: 'What is your biggest concern?', helper: 'We will include a practical suggestion for this in your learning plan.', options: [] },
 ];
 
 export const initialAssessment = { step: 0, answers: {}, complete: false };
@@ -144,37 +146,16 @@ export function recommend(profile) {
   }
   if (profile.concern === 'starting') addTopic('foundations', 'Your concern about where to start is a reason to begin with foundations.');
 
-  let suitability;
-  if (profile.time === 'low') suitability = { kind: 'pause', title: 'Pause before enrolling: make time for practice', explanation: 'You selected less than 2 hours each week. That raises a concern against the published advice to plan several focused hours for lessons and practice. Relevant topics are shown below for exploration, but resolve the time constraint before paying.', nextStep: 'First decide whether you can make room for regular practice within the access window. If not, consider postponing enrolment. Review the official access and study-time details.' };
-  else if (profile.time === 'unsure') suitability = { kind: 'clarify', title: 'Clarify your study schedule first', explanation: 'The curriculum relates to your selected interests, but your available time is unknown. That is not enough to recommend enrolment confidently. Check your college or work commitments against the published practice advice and access window.', nextStep: 'Make a realistic weekly study plan, then return and update your answers. Confirm the current course terms before deciding.' };
-  else if (profile.experience === 'builder') suitability = { kind: 'review', title: 'Review curriculum depth before enrolling', explanation: 'You already build AI applications. The published topic list may overlap with what you know and does not establish the depth you need. The topics below are areas to check, rather than evidence that this course will advance your skills.', nextStep: 'Compare the official curriculum with projects you already build. Ask Lapaas to clarify depth and any missing requirements before deciding to pay.' };
-  else if (beginner) suitability = { kind: 'cautious', title: 'A possible starting point, with a practice plan', explanation: 'The supplied FAQ allows beginners to start and stresses practice. Your goal relates to the topics below, but plan small steps rather than expecting immediate mastery. This is a conditional learning suggestion, not confirmation that the course will suit every beginner.', nextStep: 'Review the coding, format and access FAQs. Try a small practice task and check whether you can sustain regular study before deciding.' };
-  else suitability = { kind: 'explore', title: 'Relevant topics to explore, with conditions', explanation: 'Your selected goal and interests relate to the published topics below. Your experience gives us a direction for practice, but this short assessment cannot establish your proficiency, course suitability or outcomes.', nextStep: 'Compare the recommended areas with the official curriculum, review the limitations and confirm current terms before deciding whether to enrol.' };
-
+  const goalLabel = answerLabel('goal', profile.goal, profile);
+  const guidance = getLearningGuidance(profile, { goal, goalLabel, interestLabel: answerLabel('interest', profile.interest, profile) });
   const considerations = [
-    { id: 'access', title: 'Plan around the access window', text: 'Do not assume extra time will be available. Access extension terms are not verified in the supplied information.', factIds: ['KB008'] },
-    { id: 'format', title: 'Check that self-paced study suits you', text: 'If you need scheduled instruction, check other learning options or ask Lapaas for clarification. Private one-to-one mentoring is not verified.', factIds: ['KB007', 'KB011'] },
-    { id: 'outcomes', title: 'Topics are not a promise of results', text: 'Curriculum coverage does not establish personal proficiency or job readiness. Jobs, salaries, client income, business savings and completed projects are not guaranteed by this recommendation.', factIds: goal === 'portfolio' || goal === 'career' ? ['KB006'] : ['KB005'] },
+    { id: 'access', title: 'Your course access', text: 'The supplied course information lists three months of access from activation. Plan your start date around your other commitments and confirm current terms on the official page.', factIds: ['KB008'] },
+    { id: 'format', title: 'Learn at your own pace', text: 'The course is self-paced. Use the lessons and learner community as you practise. Scheduled live classes and private one-to-one mentoring are not verified in the supplied information.', factIds: ['KB007', 'KB011'] },
+    { id: 'outcomes', title: 'Learning and practical outcomes', text: 'Use the curriculum as a starting point for practice and building your own work. Jobs, salaries, client income, business savings and completed projects are not guaranteed; progress depends on your practice and circumstances.', factIds: goal === 'portfolio' || goal === 'career' ? ['KB006'] : ['KB005'] },
   ];
-  if (profile.time === 'some') considerations.push({ id: 'time', title: 'Leave room for hands-on work', text: 'Your 2–5-hour range may leave limited practice time. There is no verified minimum weekly-hour requirement or completion estimate; the exact total video duration is also unverified.', factIds: ['KB015'] });
-  if (profile.time === 'high') considerations.push({ id: 'time', title: 'More available time is not a completion guarantee', text: 'Use your available time for practice as well as lessons. The published information does not establish how quickly you personally will finish.', factIds: ['KB015'] });
-  if (beginner || ['coding', 'difficulty'].includes(profile.concern)) considerations.push({ id: 'practice', title: 'Start small and check your understanding', text: 'Beginner entry does not mean effortless learning. Try a small task, review what the code does, and use the verified community route for questions. Specific support response times are not verified.', factIds: ['KB003', 'KB011'] });
-  if (profile.role === 'professional') considerations.push({ id: 'audience', title: 'Check relevance to your work', text: 'Working professionals are not named as a separate audience in the supplied FAQ. Compare the topics with your actual work tasks rather than assuming a role-specific course track.', factIds: ['KB002'] });
-
-  const concernGuidance = {
-    coding: { title: 'Your concern: coding', text: 'Start with foundations and a small coding task. Being allowed to start without coding does not establish how much help you personally will need.', factIds: ['KB003'] },
-    difficulty: { title: 'Your concern: difficulty', text: 'Keep the first project small and check the published syllabus. Teaching depth and your personal learning pace cannot be inferred from the topic list.', factIds: ['KB004', 'KB003'] },
-    career: { title: 'Your concern: career outcomes', text: 'Focus on explaining your own practical work. Placement support, hiring outcomes and specific salaries are not verified; the course should not be chosen on the assumption of a guaranteed job.', factIds: ['KB006'] },
-    value: { title: 'Your concern: value for money', text: 'Compare the listed fee, access period and relevant topics with your needs. Value is personal. Included premium AI credits and total third-party tool costs are not verified. Review refund eligibility rather than assuming an unconditional refund.', factIds: ['KB009', 'KB008', 'KB013'] },
-    access: { title: 'Your concern: three-month access', text: 'Plan around exams and work commitments before activating. Extensions and continued access beyond the published window are not verified.', factIds: ['KB008'] },
-    starting: { title: 'Your concern: where to begin', text: 'Use foundations, then a narrow problem and one small build as a suggested starting sequence. This is our practice guidance, not a promised official course schedule.', factIds: ['KB004', 'KB003'] },
-    portfolio: { title: 'Your concern: portfolio projects', text: 'Practise one small project, test it and explain the decisions you made. Published portfolio guidance does not guarantee a finished portfolio or a job.', factIds: ['KB006', 'KB005'] },
-    'business-relevance': { title: 'Your concern: business relevance', text: 'Compare the published topics with one specific workflow in your business. A topic match alone does not establish suitability or business results.', factIds: ['KB002', 'KB004'] },
-    implementation: { title: 'Your concern: implementation effort', text: 'Start with a narrow prototype and sample data. Learning, testing and integrating a real workflow take effort; immediate production readiness is not established.', factIds: ['KB005', 'KB015'] },
-    time: { title: 'Your concern: available time', text: 'Plan for lessons and practice inside the published access window. Exact completion time and access extension terms are not verified.', factIds: ['KB015', 'KB008'] },
-    'learning-development': { title: 'Your concern: learning AI development', text: 'Choose a small development task and check your understanding before extending it. Beginner entry is not proof of personal proficiency or advanced mastery.', factIds: ['KB003', 'KB005'] },
-    'client-application': { title: 'Your concern: applying skills to client work', text: 'Practise with fictional client data and human review before proposing a live implementation. Client suitability, income and business results depend on the actual work and are not established by course coverage.', factIds: ['KB004', 'KB005'] },
-  };
+  considerations.push({ id: 'time', title: 'Your suggested study rhythm', text: guidance.learningPlan.find((item) => item.id === 'time').text + ' This is a suggested plan, not an official weekly-hour requirement or a completion estimate.', factIds: ['KB015', 'KB008'] });
+  if (beginner || ['coding', 'difficulty'].includes(profile.concern)) considerations.push({ id: 'practice', title: 'Build confidence through practice', text: 'Start with one small task and build on what you learn. The course FAQ allows learners to start without coding experience, and community access provides a route for questions.', factIds: ['KB003', 'KB011'] });
+  if (profile.role === 'professional') considerations.push({ id: 'audience', title: 'Connect the topics with your work', text: 'Use your work tasks to choose relevant practice. This plan adapts the general curriculum to your interests; the supplied course information does not describe a separate working-professional track.', factIds: ['KB002'] });
   considerations.push({ id: 'concern', ...concernGuidance[profile.concern] });
 
   // A broad interest uses the primary goal; an explicit build interest refines the example.
@@ -197,13 +178,22 @@ export function recommend(profile) {
     professional: { title: 'Work-reference FAQ explorer', description: 'Start with non-sensitive sample work notes and local questions and answers. Add a simple search and an explicit fallback.' },
   };
   const professionalRag = { title: 'Work-reference question answering demo', description: 'Use non-sensitive sample work notes, retrieve relevant excerpts and display sources. Decline questions outside those notes.' };
-  const project = profile.experience === 'beginner' ? (roleStarter[profile.role] || goalProjects.scratch)
-    : (contextualProjects[profile.interest] || (profile.role === 'professional' && interest === 'rag' ? professionalRag : projects[interest]) || goalProjects[goal] || professionalRag);
-  const facts = ['KB008', 'KB007', 'KB015'].map((id) => faqs.find((faq) => faq.id === id));
+  const selectedProject = contextualProjects[profile.interest]
+    || (profile.role === 'professional' && interest === 'rag' ? professionalRag : projects[interest])
+    || goalProjects[goal] || professionalRag;
+  // Keep a beginner's first version small without discarding their chosen goal or interest.
+  const project = profile.experience === 'beginner'
+    ? (interest === 'unsure' && goal === 'scratch'
+      ? (roleStarter[profile.role] || goalProjects.scratch)
+      : { ...selectedProject, description: 'Start with a simple version using sample data, then add one AI feature as you learn. ' + selectedProject.description })
+    : selectedProject;
+  const factIds = [...new Set([...concernGuidance[profile.concern].factIds, 'KB008', 'KB007'])].slice(0, 3);
+  const facts = factIds.map((id) => faqs.find((faq) => faq.id === id));
   return {
     profile: questions.map(({ id, short }) => ({ id, label: short, answer: answerLabel(id, profile[id], profile) })),
-    goal: answerLabel('goal', profile.goal, profile), suitability, topics, project: { ...project, label: 'Suggested practice project — not a guaranteed course assignment' },
+    goal: goalLabel, ...guidance, topics, project: { ...project, label: 'Suggested practice project — adapt it to your goals' },
     considerations: considerations.map((item) => ({ ...item, facts: item.factIds.map((id) => faqs.find((faq) => faq.id === id)) })),
     facts, officialUrl: knowledgeBase.official_course_url,
+    roadmap: createLearningRoadmap(profile, { goal, goalLabel, interest, interestLabel: answerLabel('interest', profile.interest, profile), project }),
   };
 }

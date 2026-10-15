@@ -55,7 +55,7 @@ test('invalid, missing and unknown profile values fail closed', () => {
 });
 test('beginner recommendation starts with foundations and a small suggested project', () => {
   const result = recommend(base);
-  assert.equal(result.suitability.kind, 'cautious');
+  assert.equal(result.suitability.kind, 'start');
   assert.equal(result.topics[0].id, 'foundations');
   assert.equal(result.project.title, 'Simple study FAQ explorer');
   assert.ok(result.considerations.some((item) => item.id === 'practice'));
@@ -64,7 +64,7 @@ test('portfolio student gets full-stack, coding assistance, retrieval and publis
   const result = recommend({ ...base, role: 'final-year', goal: 'portfolio', experience: 'basics', interest: 'rag', concern: 'career' });
   for (const id of ['assisted', 'fullstack', 'rag', 'shipping']) assert.ok(result.topics.some((topic) => topic.id === id));
   assert.equal(result.project.title, 'Study-notes question answering demo');
-  assert.match(result.considerations.find((item) => item.id === 'concern').text, /not verified/);
+  assert.match(result.considerations.find((item) => item.id === 'concern').text, /applications and interview preparation/);
 });
 test('freelancer gets automation, API and deployment guidance rather than a generic student project', () => {
   const result = recommend({ ...base, role: 'freelancer', goal: 'services', experience: 'tools', interest: 'unsure', concern: 'value' });
@@ -72,20 +72,23 @@ test('freelancer gets automation, API and deployment guidance rather than a gene
   assert.equal(result.project.title, 'Client reporting draft workflow');
   const concern = result.considerations.find((item) => item.id === 'concern');
   assert.ok(concern.facts.some((faq) => faq.id === 'KB009'));
-  assert.match(concern.text, /premium AI credits.*not verified/);
+  assert.match(concern.text, /current pricing, any tool costs and refund eligibility/);
 });
 for (const time of ['low', 'unsure']) {
-  test(`${time} time overrides favourable curriculum or advanced experience`, () => {
+  test(`${time} time adapts the plan without excluding any experience level`, () => {
     for (const experience of ['beginner', 'basics', 'builder']) {
       const result = recommend({ ...base, time, experience });
-      assert.equal(result.suitability.kind, time === 'low' ? 'pause' : 'clarify');
+      assert.equal(result.suitability.kind, 'start');
+      assert.match(result.suitability.title, /You can take this course/);
+      assert.match(result.learningPlan.find((item) => item.id === 'time').text, time === 'low' ? /less than 2 hours/ : /manageable study slots/);
+      assert.ok(result.learningPlan.find((item) => item.id === 'experience').text);
     }
   });
 }
-test('existing AI builders are asked to verify depth', () => {
+test('existing AI builders get an extension plan and syllabus review', () => {
   const result = recommend({ ...base, experience: 'builder' });
-  assert.equal(result.suitability.kind, 'review');
-  assert.match(result.suitability.explanation, /does not establish the depth/);
+  assert.equal(result.suitability.kind, 'start');
+  assert.match(result.learningPlan.find((item) => item.id === 'experience').text, /Review the syllabus/);
 });
 test('working professionals get an explicit audience caveat', () => {
   const result = recommend({ ...base, role: 'professional', goal: 'upskill' });
@@ -102,7 +105,9 @@ test('changing answers recomputes guidance and does not mutate previous output',
   const first = recommend(base);
   const copy = structuredClone(first);
   const second = recommend({ ...base, time: 'low', goalScope: 'other', goal: 'services', experience: 'coding', interest: 'client-automation' });
-  assert.equal(second.suitability.kind, 'pause');
+  assert.equal(second.suitability.kind, 'start');
+  assert.notEqual(first.headline, second.headline);
+  assert.notDeepEqual(first.learningPlan, second.learningPlan);
   assert.equal(second.project.title, 'Client reporting draft workflow');
   assert.deepEqual(first, copy);
 });
@@ -115,7 +120,42 @@ test('every concern produces its own guidance and sourced supporting facts', () 
   }
 });
 
-test('all adaptive profiles in both goal modes: sourced modules, exact FAQ facts, conditional guidance and no invented outcome scores', () => {
+test('changing any one of the six answers changes the visible learning guidance', () => {
+  const profile = { ...base, goalScope: 'other' };
+  const visible = (result) => JSON.stringify({
+    headline: result.headline, introduction: result.introduction, recommendation: result.suitability,
+    plan: result.learningPlan, project: result.project,
+    concern: result.considerations.find((item) => item.id === 'concern'),
+  });
+  const original = visible(recommend(profile));
+  for (const { id } of questions) {
+    const variants = new Set();
+    for (const { value } of getQuestion(id, profile).options) {
+      const changed = { ...profile, [id]: value };
+      const result = recommend(changed);
+      assert.ok(result, `${id}: ${value} remains a valid profile`);
+      const output = visible(result);
+      if (value !== profile[id]) assert.notEqual(output, original, `${id}: ${value} must affect more than the profile summary`);
+      assert.ok(!variants.has(output), `${id}: each choice needs distinct guidance`);
+      variants.add(output);
+    }
+  }
+});
+
+test('similar goal and interest intents still keep the actual selection visible', () => {
+  const business = { role: 'business', goal: 'operations', experience: 'beginner', interest: 'support-automation', time: 'low', concern: 'time' };
+  const first = recommend(business);
+  const second = recommend({ ...business, goal: 'efficiency', interest: 'internal-workflow' });
+  assert.notEqual(first.introduction, second.introduction);
+  assert.notEqual(first.suitability.explanation, second.suitability.explanation);
+  assert.notEqual(first.project.title, second.project.title);
+  assert.match(first.learningPlan[1].text, /Customer support automation/);
+  assert.match(second.learningPlan[1].text, /Internal workflow automation/);
+  assert.equal(first.suitability.kind, 'start');
+  assert.equal(second.suitability.kind, 'start');
+});
+
+test('all adaptive profiles: welcoming personalized plans, sourced modules, exact facts and no invented outcomes', () => {
   let count = 0;
   function verify(index, profile) {
     if (index < questions.length) {
@@ -141,14 +181,16 @@ test('all adaptive profiles in both goal modes: sourced modules, exact FAQ facts
     for (const fact of [...result.facts, ...result.considerations.flatMap((item) => item.facts)]) {
       assert.deepEqual(fact, faqs.find((faq) => faq.id === fact.id));
     }
-    assert.match(result.project.label, /Suggested practice project.*not a guaranteed course assignment/);
+    assert.match(result.project.label, /Suggested practice project.*adapt it to your goals/);
+    assert.equal(result.suitability.kind, 'start');
+    assert.match(result.suitability.title, /You can take this course/);
+    assert.ok(result.headline && result.introduction.includes(result.goal));
+    assert.deepEqual(result.learningPlan.map((item) => item.id), ['experience', 'focus', 'time']);
+    assert.doesNotMatch(JSON.stringify(result.suitability), /pause before enrolling|postpon|not enough to recommend|cannot establish your proficiency/i);
     const output = JSON.stringify(result);
     assert.doesNotMatch(output, /\d+\s*%|readinessScore|suitabilityScore|matchPercentage|20 LPA|lifetime access|free AI credits/i);
     assert.doesNotMatch(output, /(?:Lapaas|the course|we) (?:guarantees|promises) (?:a job|placement|income|completion)/i);
     assert.match(result.considerations.find((item) => item.id === 'outcomes').text, /not guaranteed/);
-    if (profile.time === 'low') assert.equal(result.suitability.kind, 'pause');
-    else if (profile.time === 'unsure') assert.equal(result.suitability.kind, 'clarify');
-    else if (profile.experience === 'builder') assert.equal(result.suitability.kind, 'review');
   }
   verify(0, {});
   assert.ok(count > 32400);
